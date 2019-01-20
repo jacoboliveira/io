@@ -1,12 +1,12 @@
 package br.com.staroski.io;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class allows a file to be splitted in parts.<br>
@@ -27,7 +27,7 @@ public final class FileSplitter {
      * @param file
      *            The input file.
      */
-    private final class DefaultSplitterModel extends AbstractFileSplitterModel {
+    private static final class DefaultSplitterModel extends AbstractFileSplitterModel {
 
         // the enclosed reader
         private BufferedReader reader;
@@ -44,7 +44,7 @@ public final class FileSplitter {
         @Override
         public void startReading() throws IOException {
             stopReading();
-            reader = new BufferedReader(new FileReader(getInputFile()));
+            reader = new BufferedReader(new FileReader(getFile()));
         }
 
         @Override
@@ -85,7 +85,7 @@ public final class FileSplitter {
      *            File to be splitted.
      */
     public FileSplitter(final File file) {
-        this.model = new DefaultSplitterModel(avoidNull(file, "The 'file' parameter cannot be null"));
+        this(new DefaultSplitterModel(avoidNull(file, "The 'file' parameter cannot be null")));
     }
 
     /**
@@ -187,10 +187,10 @@ public final class FileSplitter {
         model.initialize(lines, parts); // notify that the lines were read and it's ready to split in parts
         model.startReading(); // open the input file reader
         File[] partFiles = prepareParts(parts); // prepare the File objects for each part
-        int currentPart = 0; // open the current part file writer
-        PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(partFiles[currentPart])));
+        int currentPart = 0; // index of the current part file writer
         int line = 0; // reset the line counter
-        model.startWriting(partFiles[currentPart], writer); // notify start writing the part file
+        final String startWritingNull = "Method " + model.getClass().getName() + ".startWriting(File) returned null";
+        PrintWriter writer = avoidNull(model.startWriting(partFiles[currentPart]), startWritingNull); // notify start writing the part file
         String content = null; // read the content of the input file
         while ((content = model.readLine()) != null) {
             line++; // increment line number
@@ -199,17 +199,34 @@ public final class FileSplitter {
                 model.stopWriting(partFiles[currentPart], writer); // notify stop writing on the part file
                 writer.flush(); // flush the current part file writer
                 writer.close(); // close the current part file writer
-                currentPart++; // open the next part file writer
-                writer = new PrintWriter(partFiles[currentPart]);
+                currentPart++; // index of the next part file writer
                 line = 0; // reset the line counter
-                model.startWriting(partFiles[currentPart], writer); // notify start writing the part file
+                writer = avoidNull(model.startWriting(partFiles[currentPart]), startWritingNull); // notify start writing the part file
             }
         }
         model.stopReading(); // close the input file reader
         model.stopWriting(partFiles[currentPart], writer); // notify stop writing on the part file
         writer.flush(); // flush the current part file writer
         writer.close(); // close the current part file writer
-        return partFiles; // return the part files to the caller
+        return onlyExisting(partFiles); // return the part files to the caller
+    }
+
+    /**
+     * Given some {@link File} objects, returna only the ones that actually exist on file system.
+     * 
+     * @param files
+     *            The array of {@link File} objects.
+     * 
+     * @return An array containing only the {@link File} objects that actually exist on file system.
+     */
+    private File[] onlyExisting(File[] files) {
+        List<File> existing = new ArrayList<>();
+        for (File file : files) {
+            if (file.exists()) {
+                existing.add(file);
+            }
+        }
+        return existing.toArray(new File[0]);
     }
 
     /**
@@ -224,9 +241,8 @@ public final class FileSplitter {
         File[] partFiles = new File[parts];
         File folder = getOutputFolder();
         folder.mkdirs(); // ensure that the output directory tree exists
-        String namePrefix = getInputFile().getName() + ".part";
         for (int number = 0; number < parts; number++) {
-            partFiles[number] = new File(folder, namePrefix + number);
+            partFiles[number] = new File(folder, model.getPartName(number));
         }
         return partFiles;
     }

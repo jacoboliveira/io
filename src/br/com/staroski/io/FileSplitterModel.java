@@ -14,13 +14,14 @@ import java.io.PrintWriter;
  * <li>{@link #stopReading()} will be called to stop the line counting;</li>
  * <li>{@link #initialize(int, int)} will be called passing the number of lines and desired number of parts the input file should be splitted;</li>
  * <li>{@link #startReading()} will be called to start reading the content of the input file;</li>
- * <li>{@link #startWriting(File, PrintWriter)}</li> will be called to notify start writing the current part file</li>
+ * <li>{@link #getPartName(int)} will be called to get the name of each part file;</li>
+ * <li>{@link #startWriting(File)}</li> will be called to notify start writing the current part file</li>
  * <li>{@link #readLine()} will be called for each line read;</li>
  * <li>{@link #canSplit(int, String)} will be called after each line read passing the line number and the content of that line;<br>
  * if it return <code>true</code> then:
  * <ul>
  * <li>{@link #stopWriting(File, PrintWriter)}</li> will be called to notify stop writing the current part file</li>
- * <li>{@link #startWriting(File, PrintWriter)}</li> will be called to notify start writing the next part file</li>
+ * <li>{@link #startWriting(File)}</li> will be called to notify start writing the next part file</li>
  * </ul>
  * </li>
  * <li>{@link #stopReading()} will be called when the file read has finished.</li>
@@ -57,6 +58,16 @@ public interface FileSplitterModel {
     public File getFile();
 
     /**
+     * Returna the name to give to the speficied part file.
+     * 
+     * @param number
+     *            The number of the part file.
+     * 
+     * @return The name that file should have.
+     */
+    public String getPartName(int number);
+
+    /**
      * Called by the {@link FileSplitter} to notify it is ready to initialize the splitting algorithm.
      * 
      * @param lines
@@ -91,13 +102,12 @@ public interface FileSplitterModel {
      * @param partFile
      *            The part file itself.
      * 
-     * @param writer
-     *            The writer used to write data on the part file.
+     * @return The writer used to write data on the part file.
      * 
      * @throws IOException
      *             If some I/O operation goes wrong.
      */
-    public void startWriting(File partFile, PrintWriter writer) throws IOException;
+    public PrintWriter startWriting(File partFile) throws IOException;
 
     /**
      * Called by the {@link FileSplitter} to stop reading the input file.

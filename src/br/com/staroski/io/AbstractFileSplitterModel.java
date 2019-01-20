@@ -1,6 +1,8 @@
 package br.com.staroski.io;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -66,6 +68,18 @@ public abstract class AbstractFileSplitterModel implements FileSplitterModel {
     }
 
     /**
+     * This implementation returns the name of the file with the suffix <code>.part</code> followed by the <t>number</> parameter.
+     * 
+     * @see FileSplitterModel#getPartName(int)
+     */
+    @Override
+    public String getPartName(int number) {
+        File file = getFile();
+        String partName = file == null ? "part" : file.getName() + ".part";
+        return partName + number;
+    }
+
+    /**
      * This implementation initializes the values returned by the {@link #getLines()}, {@link #getParts()} and {@link #getPartSize()} methods.
      * 
      * @param lines
@@ -87,7 +101,9 @@ public abstract class AbstractFileSplitterModel implements FileSplitterModel {
      * @see FileSplitterModel#startWriting(File, PrintWriter)
      */
     @Override
-    public void startWriting(File partFile, PrintWriter writer) throws IOException {}
+    public PrintWriter startWriting(File partFile) throws IOException {
+        return new PrintWriter(new BufferedWriter(new FileWriter(partFile)));
+    }
 
     /**
      * @see FileSplitterModel#stopWriting(File, PrintWriter)
