@@ -1,5 +1,6 @@
 package br.com.staroski.io;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -10,8 +11,8 @@ import java.io.PrintWriter;
  * After calling the {@link FileSplitter#split(int)} method the {@link FileSplitterModel} will be used in the following order:<br>
  * <ol>
  * <li>{@link #startReading()} method will be called to start counting the lines of input file;</li>
- * <li>{@link #readLine()} will be called for each line read;</li>
- * <li>{@link #stopReading()} will be called to stop the line counting;</li>
+ * <li>{@link #readLine(BufferedReader)} will be called for each line read;</li>
+ * <li>{@link #stopReading(BufferedReader)} will be called to stop the line counting;</li>
  * <li>{@link #initialize(int, int)} will be called passing the number of lines and desired number of parts the input file should be splitted;</li>
  * <li>{@link #startReading()} will be called to start reading the content of the input file;</li>
  * <li>{@link #getPartName(int)} will be called to get the name of each part file;</li>
@@ -24,11 +25,9 @@ import java.io.PrintWriter;
  * <li>{@link #startWriting(File)}</li> will be called to notify start writing the next part file</li>
  * </ul>
  * </li>
- * <li>{@link #stopReading()} will be called when the file read has finished.</li>
+ * <li>{@link #stopReading(BufferedReader)} will be called when the file read has finished.</li>
  * <li>{@link #stopWriting(File, PrintWriter)}</li> will be called to notify stop writing the current part file</li>
  * </ol>
- * The {@link #getFile()} method is supposed to return the input file.<br>
- * Usually the {@link #startReading()} method calls the {@link #getFile()} method but this is a implementation specific behavior.
  * 
  * @author Ricardo Artur Staroski
  */
@@ -49,13 +48,6 @@ public interface FileSplitterModel {
      *             If something goes wrong.
      */
     public boolean canSplit(int line, String content) throws Exception;
-
-    /**
-     * Called by the {@link FileSplitter} to get the input file.
-     * 
-     * @return The input file.
-     */
-    public File getFile();
 
     /**
      * Returna the name to give to the speficied part file.
@@ -81,20 +73,25 @@ public interface FileSplitterModel {
     /**
      * Called by the {@link FileSplitter} to read a line of text from the input file.
      * 
+     * @param reader
+     *            The {@link BufferedReader} used to read the input file.
+     * 
      * @return The line that was read or <t>null</t> if end of file reached.
      * 
      * @throws IOException
      *             If some I/O operation goes wrong.
      */
-    public String readLine() throws IOException;
+    public String readLine(BufferedReader reader) throws IOException;
 
     /**
      * Called by the {@link FileSplitter} to start reading the input file.
      * 
+     * @return The {@link BufferedReader} used to read the content of input file.
+     * 
      * @throws IOException
      *             If some I/O operation goes wrong.
      */
-    public void startReading() throws IOException;
+    public BufferedReader startReading() throws IOException;
 
     /**
      * Called by the {@link FileSplitter} to notify the start of writing on a part file.
@@ -112,10 +109,13 @@ public interface FileSplitterModel {
     /**
      * Called by the {@link FileSplitter} to stop reading the input file.
      * 
+     * @param reader
+     *            The reader used to read the input file.
+     * 
      * @throws IOException
      *             If some I/O operation goes wrong.
      */
-    public void stopReading() throws IOException;
+    public void stopReading(BufferedReader reader) throws IOException;
 
     /**
      * Called by the {@link FileSplitter} to notify the stop of writing on a part file.

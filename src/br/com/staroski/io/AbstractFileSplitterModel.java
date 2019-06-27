@@ -60,14 +60,6 @@ public abstract class AbstractFileSplitterModel implements FileSplitterModel {
     }
 
     /**
-     * @see FileSplitterModel#getFile()
-     */
-    @Override
-    public File getFile() {
-        return file;
-    }
-
-    /**
      * This implementation returns the name of the file with the suffix <code>.part</code> followed by the <t>number</> parameter.
      * 
      * @see FileSplitterModel#getPartName(int)
@@ -110,6 +102,15 @@ public abstract class AbstractFileSplitterModel implements FileSplitterModel {
      */
     @Override
     public void stopWriting(File partFile, PrintWriter writer) throws IOException {}
+
+    /**
+     * Gets the enclosed {@link File} if any.
+     * 
+     * @return The enclosed file or <code>null</code>.
+     */
+    protected File getFile() {
+        return file;
+    }
 
     /**
      * Returns the number of lines of the input file.<br>

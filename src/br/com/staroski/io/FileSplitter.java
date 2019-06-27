@@ -29,7 +29,6 @@ public final class FileSplitter {
      */
     private static final class DefaultSplitterModel extends AbstractFileSplitterModel {
 
-        // the enclosed reader
         private BufferedReader reader;
 
         DefaultSplitterModel(File file) {
@@ -37,21 +36,21 @@ public final class FileSplitter {
         }
 
         @Override
-        public String readLine() throws IOException {
-            return reader == null ? null : reader.readLine();
+        public String readLine(BufferedReader reader) throws IOException {
+            return reader.readLine();
         }
 
         @Override
-        public void startReading() throws IOException {
-            stopReading();
+        public BufferedReader startReading() throws IOException {
+            stopReading(reader);
             reader = new BufferedReader(new FileReader(getFile()));
+            return reader;
         }
 
         @Override
-        public void stopReading() throws IOException {
+        public void stopReading(BufferedReader reader) throws IOException {
             if (reader != null) {
                 reader.close();
-                reader = null;
             }
         }
     }
@@ -61,7 +60,12 @@ public final class FileSplitter {
      * 
      * @param parameter
      *            The parameter to be validated.
+     * 
+     * @param message
+     *            The exception message when parameter is null.
+     * 
      * @return The parameter itself.
+     * 
      * @throws IllegalArgumentException
      *             if parameter is <t>null</t>.
      */
@@ -109,17 +113,8 @@ public final class FileSplitter {
     }
 
     /**
-     * Returns the input {@link File}.
-     * 
-     * @return the input file.
-     */
-    public File getInputFile() {
-        return avoidNull(model.getFile(), "Method " + model.getClass().getName() + ".getFile() returned null");
-    }
-
-    /**
      * Returns the output folder into where the parts will be generated.<br>
-     * By default it returns the enclosed file's parent file.<br>
+     * By default it returns a {@link File} corresponding to <code>System.getProperty("user.dir")</code>.<br>
      * Can be changed through the {@link #setOutputFolder(File)} method.
      * 
      * @return The output folder into where the parts will be generated.
@@ -128,7 +123,7 @@ public final class FileSplitter {
      */
     public File getOutputFolder() {
         if (outputFolder == null) {
-            outputFolder = getInputFile().getParentFile();
+            outputFolder = new File(System.getProperty("user.dir"));
         }
         return outputFolder;
     }
@@ -180,39 +175,43 @@ public final class FileSplitter {
      * @see #setOutputFolder(File)
      */
     public File[] split(int parts) throws Exception {
+        final String modelClassName = model.getClass().getName();
+        final String startReadingNull = "Method " + modelClassName + ".startReading() returned null";
+        final String startWritingNull = "Method " + modelClassName + ".startWriting(File) returned null";
         int lines; // start counting the amount of lines of the input file
-        model.startReading(); // open the input file reader
-        for (lines = 0; model.readLine() != null; lines++) { /* read whole file to count lines */ }
-        model.stopReading(); // close the input file reader
+        BufferedReader reader = avoidNull(model.startReading(), startReadingNull); // open the input file reader
+        for (lines = 0; model.readLine(reader) != null; lines++) { /* read whole file to count lines */ }
+        model.stopReading(reader); // close the input file reader
         model.initialize(lines, parts); // notify that the lines were read and it's ready to split in parts
-        model.startReading(); // open the input file reader
+        reader = avoidNull(model.startReading(), startReadingNull); // open the input file reader
         File[] partFiles = prepareParts(parts); // prepare the File objects for each part
         int currentPart = 0; // index of the current part file writer
         int line = 0; // reset the line counter
-        final String startWritingNull = "Method " + model.getClass().getName() + ".startWriting(File) returned null";
         PrintWriter writer = avoidNull(model.startWriting(partFiles[currentPart]), startWritingNull); // notify start writing the part file
         String content = null; // read the content of the input file
-        while ((content = model.readLine()) != null) {
+        while ((content = model.readLine(reader)) != null) {
             line++; // increment line number
             writer.println(content); // copy the content from the input file to the current part file
             if (model.canSplit(line, content)) { // check if can close the current part and open the next
+                writer.flush(); // flush the current part file writer prior to notify stop writing
                 model.stopWriting(partFiles[currentPart], writer); // notify stop writing on the part file
-                writer.flush(); // flush the current part file writer
+                writer.flush(); // ensure the the current part file writer is flushed after notify stop writing
                 writer.close(); // close the current part file writer
                 currentPart++; // index of the next part file writer
                 line = 0; // reset the line counter
                 writer = avoidNull(model.startWriting(partFiles[currentPart]), startWritingNull); // notify start writing the part file
             }
         }
-        model.stopReading(); // close the input file reader
+        model.stopReading(reader); // close the input file reader
+        writer.flush(); // flush the current part file writer prior to notify stop writing
         model.stopWriting(partFiles[currentPart], writer); // notify stop writing on the part file
-        writer.flush(); // flush the current part file writer
+        writer.flush(); // ensure the the current part file writer is flushed after notify stop writing
         writer.close(); // close the current part file writer
         return onlyExisting(partFiles); // return the part files to the caller
     }
 
     /**
-     * Given some {@link File} objects, returna only the ones that actually exist on file system.
+     * Given some {@link File} objects, returns only the ones that actually exist on file system.
      * 
      * @param files
      *            The array of {@link File} objects.
@@ -226,11 +225,11 @@ public final class FileSplitter {
                 existing.add(file);
             }
         }
-        return existing.toArray(new File[0]);
+        return existing.toArray(new File[existing.size()]);
     }
 
     /**
-     * Creates an {@link File} array for the specied amount of parts.
+     * Creates an {@link File} array for the specified amount of parts.
      * 
      * @param parts
      *            The number of parts.
