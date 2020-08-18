@@ -134,9 +134,10 @@ public final class StdIO {
                     return value;
                 }
                 showMessage(TYPE_BOOLEAN, line, PREDICATE_FAILED);
-            } catch (IOException ioe) {
-                throw wrap(ioe);
             } catch (Exception e) {
+                if (e instanceof IOException) {
+                    throw wrap(e);
+                }
                 showMessage(TYPE_BOOLEAN, line, INVALID);
             }
         }
@@ -164,9 +165,10 @@ public final class StdIO {
                     return value;
                 }
                 showMessage(TYPE_BOOLEAN, line, PREDICATE_FAILED);
-            } catch (IOException ioe) {
-                throw wrap(ioe);
             } catch (Exception e) {
+                if (e instanceof IOException) {
+                    throw wrap(e);
+                }
                 showMessage(TYPE_BOOLEAN, line, INVALID);
             }
         }
@@ -192,9 +194,10 @@ public final class StdIO {
                     return value;
                 }
                 showMessage(TYPE_BYTE, line, PREDICATE_FAILED);
-            } catch (IOException ioe) {
-                throw wrap(ioe);
             } catch (Exception e) {
+                if (e instanceof IOException) {
+                    throw wrap(e);
+                }
                 showMessage(TYPE_BYTE, line, INVALID);
             }
         }
@@ -222,9 +225,10 @@ public final class StdIO {
                     return value;
                 }
                 showMessage(TYPE_BYTE, line, PREDICATE_FAILED);
-            } catch (IOException ioe) {
-                throw wrap(ioe);
             } catch (Exception e) {
+                if (e instanceof IOException) {
+                    throw wrap(e);
+                }
                 showMessage(TYPE_BYTE, line, INVALID);
             }
         }
@@ -250,9 +254,10 @@ public final class StdIO {
                     return value;
                 }
                 showMessage(TYPE_CHAR, line, PREDICATE_FAILED);
-            } catch (IOException ioe) {
-                throw wrap(ioe);
             } catch (Exception e) {
+                if (e instanceof IOException) {
+                    throw wrap(e);
+                }
                 showMessage(TYPE_CHAR, line, INVALID);
             }
         }
@@ -280,9 +285,10 @@ public final class StdIO {
                     return value;
                 }
                 showMessage(TYPE_CHAR, line, PREDICATE_FAILED);
-            } catch (IOException ioe) {
-                throw wrap(ioe);
             } catch (Exception e) {
+                if (e instanceof IOException) {
+                    throw wrap(e);
+                }
                 showMessage(TYPE_CHAR, line, INVALID);
             }
         }
@@ -308,9 +314,10 @@ public final class StdIO {
                     return value;
                 }
                 showMessage(TYPE_DOUBLE, line, PREDICATE_FAILED);
-            } catch (IOException ioe) {
-                throw wrap(ioe);
             } catch (Exception e) {
+                if (e instanceof IOException) {
+                    throw wrap(e);
+                }
                 showMessage(TYPE_DOUBLE, line, INVALID);
             }
         }
@@ -338,9 +345,10 @@ public final class StdIO {
                     return value;
                 }
                 showMessage(TYPE_DOUBLE, line, PREDICATE_FAILED);
-            } catch (IOException ioe) {
-                throw wrap(ioe);
             } catch (Exception e) {
+                if (e instanceof IOException) {
+                    throw wrap(e);
+                }
                 showMessage(TYPE_DOUBLE, line, INVALID);
             }
         }
@@ -366,9 +374,10 @@ public final class StdIO {
                     return value;
                 }
                 showMessage(TYPE_FLOAT, line, PREDICATE_FAILED);
-            } catch (IOException ioe) {
-                throw wrap(ioe);
             } catch (Exception e) {
+                if (e instanceof IOException) {
+                    throw wrap(e);
+                }
                 showMessage(TYPE_FLOAT, line, INVALID);
             }
         }
@@ -396,9 +405,10 @@ public final class StdIO {
                     return value;
                 }
                 showMessage(TYPE_FLOAT, line, PREDICATE_FAILED);
-            } catch (IOException ioe) {
-                throw wrap(ioe);
             } catch (Exception e) {
+                if (e instanceof IOException) {
+                    throw wrap(e);
+                }
                 showMessage(TYPE_FLOAT, line, INVALID);
             }
         }
@@ -424,9 +434,10 @@ public final class StdIO {
                     return value;
                 }
                 showMessage(TYPE_INT, line, PREDICATE_FAILED);
-            } catch (IOException ioe) {
-                throw wrap(ioe);
             } catch (Exception e) {
+                if (e instanceof IOException) {
+                    throw wrap(e);
+                }
                 showMessage(TYPE_INT, line, INVALID);
             }
         }
@@ -454,9 +465,10 @@ public final class StdIO {
                     return value;
                 }
                 showMessage(TYPE_INT, line, PREDICATE_FAILED);
-            } catch (IOException ioe) {
-                throw wrap(ioe);
             } catch (Exception e) {
+                if (e instanceof IOException) {
+                    throw wrap(e);
+                }
                 showMessage(TYPE_INT, line, INVALID);
             }
         }
@@ -482,9 +494,10 @@ public final class StdIO {
                     return value;
                 }
                 showMessage(TYPE_LONG, line, PREDICATE_FAILED);
-            } catch (IOException ioe) {
-                throw wrap(ioe);
             } catch (Exception e) {
+                if (e instanceof IOException) {
+                    throw wrap(e);
+                }
                 showMessage(TYPE_LONG, line, INVALID);
             }
         }
@@ -512,9 +525,10 @@ public final class StdIO {
                     return value;
                 }
                 showMessage(TYPE_LONG, line, PREDICATE_FAILED);
-            } catch (IOException ioe) {
-                throw wrap(ioe);
             } catch (Exception e) {
+                if (e instanceof IOException) {
+                    throw wrap(e);
+                }
                 showMessage(TYPE_LONG, line, INVALID);
             }
         }
@@ -540,9 +554,10 @@ public final class StdIO {
                     return value;
                 }
                 showMessage(TYPE_SHORT, line, PREDICATE_FAILED);
-            } catch (IOException ioe) {
-                throw wrap(ioe);
             } catch (Exception e) {
+                if (e instanceof IOException) {
+                    throw wrap(e);
+                }
                 showMessage(TYPE_SHORT, line, INVALID);
             }
         }
@@ -570,9 +585,10 @@ public final class StdIO {
                     return value;
                 }
                 showMessage(TYPE_SHORT, line, PREDICATE_FAILED);
-            } catch (IOException ioe) {
-                throw wrap(ioe);
             } catch (Exception e) {
+                if (e instanceof IOException) {
+                    throw wrap(e);
+                }
                 showMessage(TYPE_SHORT, line, INVALID);
             }
         }
@@ -598,9 +614,10 @@ public final class StdIO {
                     return line;
                 }
                 showMessage(TYPE_STRING, line, PREDICATE_FAILED);
-            } catch (IOException ioe) {
-                throw wrap(ioe);
             } catch (Exception e) {
+                if (e instanceof IOException) {
+                    throw wrap(e);
+                }
                 showMessage(TYPE_STRING, line, INVALID);
             }
         }
@@ -627,9 +644,10 @@ public final class StdIO {
                     return line;
                 }
                 showMessage(TYPE_STRING, line, PREDICATE_FAILED);
-            } catch (IOException ioe) {
-                throw wrap(ioe);
             } catch (Exception e) {
+                if (e instanceof IOException) {
+                    throw wrap(e);
+                }
                 showMessage(TYPE_STRING, line, INVALID);
             }
         }
