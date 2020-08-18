@@ -12,6 +12,19 @@ import java.util.function.Predicate;
  */
 public final class StdIO {
 
+    private static final String TYPE_BYTE = "byte";
+    private static final String TYPE_BOOLEAN = "boolean";
+    private static final String TYPE_SHORT = "short";
+    private static final String TYPE_CHAR = "char";
+    private static final String TYPE_INT = "int";
+    private static final String TYPE_FLOAT = "float";
+    private static final String TYPE_LONG = "long";
+    private static final String TYPE_DOUBLE = "double";
+    private static final String TYPE_STRING = "String";
+
+    private static final String PREDICATE_FAILED = "não atende ao predicado informado!";
+    private static final String INVALID = "não é válido!";
+
     // não estou utilizando Scanner pois ele não é legal para ler entrada de dados a partir do teclado
     // o Scanner não consome a quebra de linha ao presionar ENTER e isso gera comportamentos indesejados
     private static final BufferedReader IN = new BufferedReader(new InputStreamReader(System.in));
@@ -105,22 +118,26 @@ public final class StdIO {
         while (true) {
             try {
                 return Boolean.parseBoolean(IN.readLine());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            } catch (IOException ioe) {
+                throw wrap(ioe);
             }
         }
     }
 
     public static boolean readBoolean(Predicate<Boolean> predicate) {
         while (true) {
+            String line = null;
             try {
-                boolean value = Boolean.parseBoolean(IN.readLine());
+                line = IN.readLine();
+                boolean value = Boolean.parseBoolean(line);
                 if (predicate.test(value)) {
                     return value;
                 }
-                println("Valor boolean não atende ao predicado informado!");
+                showMessage(TYPE_BOOLEAN, line, PREDICATE_FAILED);
+            } catch (IOException ioe) {
+                throw wrap(ioe);
             } catch (Exception e) {
-                println("Valor boolean inválido!");
+                showMessage(TYPE_BOOLEAN, line, INVALID);
             }
         }
     }
@@ -130,23 +147,27 @@ public final class StdIO {
             try {
                 print(message);
                 return Boolean.parseBoolean(IN.readLine());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            } catch (IOException ioe) {
+                throw wrap(ioe);
             }
         }
     }
 
     public static boolean readBoolean(String message, Predicate<Boolean> predicate) {
         while (true) {
+            String line = null;
             try {
                 print(message);
-                boolean value = Boolean.parseBoolean(IN.readLine());
+                line = IN.readLine();
+                boolean value = Boolean.parseBoolean(line);
                 if (predicate.test(value)) {
                     return value;
                 }
-                println("Valor boolean não atende ao predicado informado!");
+                showMessage(TYPE_BOOLEAN, line, PREDICATE_FAILED);
+            } catch (IOException ioe) {
+                throw wrap(ioe);
             } catch (Exception e) {
-                println("Valor boolean inválido!");
+                showMessage(TYPE_BOOLEAN, line, INVALID);
             }
         }
     }
@@ -155,22 +176,26 @@ public final class StdIO {
         while (true) {
             try {
                 return Byte.parseByte(IN.readLine());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            } catch (IOException ioe) {
+                throw wrap(ioe);
             }
         }
     }
 
     public static byte readByte(Predicate<Byte> predicate) {
         while (true) {
+            String line = null;
             try {
-                byte value = Byte.parseByte(IN.readLine());
+                line = IN.readLine();
+                byte value = Byte.parseByte(line);
                 if (predicate.test(value)) {
                     return value;
                 }
-                println("Valor byte não atende ao predicado informado!");
+                showMessage(TYPE_BYTE, line, PREDICATE_FAILED);
+            } catch (IOException ioe) {
+                throw wrap(ioe);
             } catch (Exception e) {
-                println("Valor byte inválido!");
+                showMessage(TYPE_BYTE, line, INVALID);
             }
         }
     }
@@ -180,23 +205,27 @@ public final class StdIO {
             try {
                 print(message);
                 return Byte.parseByte(IN.readLine());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            } catch (IOException ioe) {
+                throw wrap(ioe);
             }
         }
     }
 
     public static byte readByte(String message, Predicate<Byte> predicate) {
         while (true) {
+            String line = null;
             try {
                 print(message);
-                byte value = Byte.parseByte(IN.readLine());
+                line = IN.readLine();
+                byte value = Byte.parseByte(line);
                 if (predicate.test(value)) {
                     return value;
                 }
-                println("Valor byte não atende ao predicado informado!");
+                showMessage(TYPE_BYTE, line, PREDICATE_FAILED);
+            } catch (IOException ioe) {
+                throw wrap(ioe);
             } catch (Exception e) {
-                println("Valor byte inválido!");
+                showMessage(TYPE_BYTE, line, INVALID);
             }
         }
     }
@@ -205,22 +234,26 @@ public final class StdIO {
         while (true) {
             try {
                 return IN.readLine().charAt(0);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            } catch (IOException ioe) {
+                throw wrap(ioe);
             }
         }
     }
 
     public static char readChar(Predicate<Character> predicate) {
         while (true) {
+            String line = null;
             try {
-                char value = IN.readLine().charAt(0);
+                line = IN.readLine().substring(0, 1);
+                char value = line.charAt(0);
                 if (predicate.test(value)) {
                     return value;
                 }
-                println("Valor char não atende ao predicado informado!");
+                showMessage(TYPE_CHAR, line, PREDICATE_FAILED);
+            } catch (IOException ioe) {
+                throw wrap(ioe);
             } catch (Exception e) {
-                println("Valor char inválido!");
+                showMessage(TYPE_CHAR, line, INVALID);
             }
         }
     }
@@ -230,23 +263,27 @@ public final class StdIO {
             try {
                 print(message);
                 return IN.readLine().charAt(0);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            } catch (IOException ioe) {
+                throw wrap(ioe);
             }
         }
     }
 
     public static char readChar(String message, Predicate<Character> predicate) {
         while (true) {
+            String line = null;
             try {
                 print(message);
-                char value = IN.readLine().charAt(0);
+                line = IN.readLine().substring(0, 1);
+                char value = line.charAt(0);
                 if (predicate.test(value)) {
                     return value;
                 }
-                println("Valor char não atende ao predicado informado!");
+                showMessage(TYPE_CHAR, line, PREDICATE_FAILED);
+            } catch (IOException ioe) {
+                throw wrap(ioe);
             } catch (Exception e) {
-                println("Valor char inválido!");
+                showMessage(TYPE_CHAR, line, INVALID);
             }
         }
     }
@@ -255,22 +292,26 @@ public final class StdIO {
         while (true) {
             try {
                 return Double.parseDouble(IN.readLine());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            } catch (IOException ioe) {
+                throw wrap(ioe);
             }
         }
     }
 
     public static double readDouble(Predicate<Double> predicate) {
         while (true) {
+            String line = null;
             try {
-                double value = Double.parseDouble(IN.readLine());
+                line = IN.readLine();
+                double value = Double.parseDouble(line);
                 if (predicate.test(value)) {
                     return value;
                 }
-                println("Valor double não atende ao predicado informado!");
+                showMessage(TYPE_DOUBLE, line, PREDICATE_FAILED);
+            } catch (IOException ioe) {
+                throw wrap(ioe);
             } catch (Exception e) {
-                println("Valor double inválido!");
+                showMessage(TYPE_DOUBLE, line, INVALID);
             }
         }
     }
@@ -280,23 +321,27 @@ public final class StdIO {
             try {
                 print(message);
                 return Double.parseDouble(IN.readLine());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            } catch (IOException ioe) {
+                throw wrap(ioe);
             }
         }
     }
 
     public static double readDouble(String message, Predicate<Double> predicate) {
         while (true) {
+            String line = null;
             try {
                 print(message);
-                double value = Double.parseDouble(IN.readLine());
+                line = IN.readLine();
+                double value = Double.parseDouble(line);
                 if (predicate.test(value)) {
                     return value;
                 }
-                println("Valor double não atende ao predicado informado!");
+                showMessage(TYPE_DOUBLE, line, PREDICATE_FAILED);
+            } catch (IOException ioe) {
+                throw wrap(ioe);
             } catch (Exception e) {
-                println("Valor double inválido!");
+                showMessage(TYPE_DOUBLE, line, INVALID);
             }
         }
     }
@@ -305,22 +350,26 @@ public final class StdIO {
         while (true) {
             try {
                 return Float.parseFloat(IN.readLine());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            } catch (IOException ioe) {
+                throw wrap(ioe);
             }
         }
     }
 
     public static float readFloat(Predicate<Float> predicate) {
         while (true) {
+            String line = null;
             try {
-                float value = Float.parseFloat(IN.readLine());
+                line = IN.readLine();
+                float value = Float.parseFloat(line);
                 if (predicate.test(value)) {
                     return value;
                 }
-                println("Valor float não atende ao predicado informado!");
+                showMessage(TYPE_FLOAT, line, PREDICATE_FAILED);
+            } catch (IOException ioe) {
+                throw wrap(ioe);
             } catch (Exception e) {
-                println("Valor float inválido!");
+                showMessage(TYPE_FLOAT, line, INVALID);
             }
         }
     }
@@ -330,23 +379,27 @@ public final class StdIO {
             try {
                 print(message);
                 return Float.parseFloat(IN.readLine());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            } catch (IOException ioe) {
+                throw wrap(ioe);
             }
         }
     }
 
     public static float readFloat(String message, Predicate<Float> predicate) {
         while (true) {
+            String line = null;
             try {
                 print(message);
-                float value = Float.parseFloat(IN.readLine());
+                line = IN.readLine();
+                float value = Float.parseFloat(line);
                 if (predicate.test(value)) {
                     return value;
                 }
-                println("Valor float não atende ao predicado informado!");
+                showMessage(TYPE_FLOAT, line, PREDICATE_FAILED);
+            } catch (IOException ioe) {
+                throw wrap(ioe);
             } catch (Exception e) {
-                println("Valor float inválido!");
+                showMessage(TYPE_FLOAT, line, INVALID);
             }
         }
     }
@@ -355,22 +408,26 @@ public final class StdIO {
         while (true) {
             try {
                 return Integer.parseInt(IN.readLine());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            } catch (IOException ioe) {
+                throw wrap(ioe);
             }
         }
     }
 
     public static int readInt(Predicate<Integer> predicate) {
         while (true) {
+            String line = null;
             try {
-                int value = Integer.parseInt(IN.readLine());
+                line = IN.readLine();
+                int value = Integer.parseInt(line);
                 if (predicate.test(value)) {
                     return value;
                 }
-                println("Valor inválido!");
+                showMessage(TYPE_INT, line, PREDICATE_FAILED);
+            } catch (IOException ioe) {
+                throw wrap(ioe);
             } catch (Exception e) {
-                println("Valor inválido!");
+                showMessage(TYPE_INT, line, INVALID);
             }
         }
     }
@@ -380,23 +437,27 @@ public final class StdIO {
             try {
                 print(message);
                 return Integer.parseInt(IN.readLine());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            } catch (IOException ioe) {
+                throw wrap(ioe);
             }
         }
     }
 
     public static int readInt(String message, Predicate<Integer> predicate) {
         while (true) {
+            String line = null;
             try {
                 print(message);
-                int value = Integer.parseInt(IN.readLine());
+                line = IN.readLine();
+                int value = Integer.parseInt(line);
                 if (predicate.test(value)) {
                     return value;
                 }
-                println("Valor int não atende ao predicado informado!");
+                showMessage(TYPE_INT, line, PREDICATE_FAILED);
+            } catch (IOException ioe) {
+                throw wrap(ioe);
             } catch (Exception e) {
-                println("Valor int inválido!");
+                showMessage(TYPE_INT, line, INVALID);
             }
         }
     }
@@ -405,22 +466,26 @@ public final class StdIO {
         while (true) {
             try {
                 return Long.parseLong(IN.readLine());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            } catch (IOException ioe) {
+                throw wrap(ioe);
             }
         }
     }
 
     public static long readLong(Predicate<Long> predicate) {
         while (true) {
+            String line = null;
             try {
-                long value = Long.parseLong(IN.readLine());
+                line = IN.readLine();
+                long value = Long.parseLong(line);
                 if (predicate.test(value)) {
                     return value;
                 }
-                println("Valor long não atende ao predicado informado!");
+                showMessage(TYPE_LONG, line, PREDICATE_FAILED);
+            } catch (IOException ioe) {
+                throw wrap(ioe);
             } catch (Exception e) {
-                println("Valor long inválido!");
+                showMessage(TYPE_LONG, line, INVALID);
             }
         }
     }
@@ -430,23 +495,27 @@ public final class StdIO {
             try {
                 print(message);
                 return Long.parseLong(IN.readLine());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            } catch (IOException ioe) {
+                throw wrap(ioe);
             }
         }
     }
 
     public static long readLong(String message, Predicate<Long> predicate) {
         while (true) {
+            String line = null;
             try {
                 print(message);
-                long value = Long.parseLong(IN.readLine());
+                line = IN.readLine();
+                long value = Long.parseLong(line);
                 if (predicate.test(value)) {
                     return value;
                 }
-                println("Valor long não atende ao predicado informado!");
+                showMessage(TYPE_LONG, line, PREDICATE_FAILED);
+            } catch (IOException ioe) {
+                throw wrap(ioe);
             } catch (Exception e) {
-                println("Valor long inválido!");
+                showMessage(TYPE_LONG, line, INVALID);
             }
         }
     }
@@ -455,22 +524,26 @@ public final class StdIO {
         while (true) {
             try {
                 return Short.parseShort(IN.readLine());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            } catch (IOException ioe) {
+                throw wrap(ioe);
             }
         }
     }
 
     public static short readShort(Predicate<Short> predicate) {
         while (true) {
+            String line = null;
             try {
-                short value = Short.parseShort(IN.readLine());
+                line = IN.readLine();
+                short value = Short.parseShort(line);
                 if (predicate.test(value)) {
                     return value;
                 }
-                println("Valor short não atende ao predicado informado!");
+                showMessage(TYPE_SHORT, line, PREDICATE_FAILED);
+            } catch (IOException ioe) {
+                throw wrap(ioe);
             } catch (Exception e) {
-                println("Valor short inválido!");
+                showMessage(TYPE_SHORT, line, INVALID);
             }
         }
     }
@@ -480,23 +553,27 @@ public final class StdIO {
             try {
                 print(message);
                 return Short.parseShort(IN.readLine());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            } catch (IOException ioe) {
+                throw wrap(ioe);
             }
         }
     }
 
     public static short readShort(String message, Predicate<Short> predicate) {
         while (true) {
+            String line = null;
             try {
                 print(message);
-                short value = Short.parseShort(IN.readLine());
+                line = IN.readLine();
+                short value = Short.parseShort(line);
                 if (predicate.test(value)) {
                     return value;
                 }
-                println("Valor short não atende ao predicado informado!");
+                showMessage(TYPE_SHORT, line, PREDICATE_FAILED);
+            } catch (IOException ioe) {
+                throw wrap(ioe);
             } catch (Exception e) {
-                println("Valor short inválido!");
+                showMessage(TYPE_SHORT, line, INVALID);
             }
         }
     }
@@ -505,22 +582,26 @@ public final class StdIO {
         while (true) {
             try {
                 return IN.readLine();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            } catch (IOException ioe) {
+                throw wrap(ioe);
             }
         }
     }
 
     public static String readString(Predicate<String> predicate) {
         while (true) {
+            String line = null;
             try {
-                String value = IN.readLine();
-                if (predicate.test(value)) {
-                    return value;
+
+                line = IN.readLine();
+                if (predicate.test(line)) {
+                    return line;
                 }
-                println("Valor String não atende ao predicado informado!");
+                showMessage(TYPE_STRING, line, PREDICATE_FAILED);
+            } catch (IOException ioe) {
+                throw wrap(ioe);
             } catch (Exception e) {
-                println("Valor String inválido!");
+                showMessage(TYPE_STRING, line, INVALID);
             }
         }
     }
@@ -530,25 +611,39 @@ public final class StdIO {
             try {
                 print(message);
                 return IN.readLine();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            } catch (IOException ioe) {
+                throw wrap(ioe);
             }
         }
     }
 
     public static String readString(String message, Predicate<String> predicate) {
         while (true) {
+            String line = null;
             try {
                 print(message);
-                String value = IN.readLine();
-                if (predicate.test(value)) {
-                    return value;
+                line = IN.readLine();
+                if (predicate.test(line)) {
+                    return line;
                 }
-                println("Valor String não atende ao predicado informado!");
+                showMessage(TYPE_STRING, line, PREDICATE_FAILED);
+            } catch (IOException ioe) {
+                throw wrap(ioe);
             } catch (Exception e) {
-                println("Valor String inválido!");
+                showMessage(TYPE_STRING, line, INVALID);
             }
         }
+    }
+
+    private static void showMessage(String type, String value, String message) {
+        println("Valor \"" + value + "\" do tipo " + type + " " + message);
+    }
+
+    private static RuntimeException wrap(Throwable t) {
+        if (t instanceof RuntimeException) {
+            return (RuntimeException) t;
+        }
+        return new RuntimeException(t.getLocalizedMessage(), t);
     }
 
     private StdIO() {}
