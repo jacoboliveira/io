@@ -8,7 +8,7 @@ import java.util.Locale;
 import java.util.function.Predicate;
 
 /**
- * Classe utilit·ria para ler entrada de dados pelo teclado e escrever na saÌda padr„o do sistema.
+ * Classe utilit√°ria para ler entrada de dados pelo teclado e escrever na sa√≠da padr√£o do sistema.
  */
 public final class StdIO {
 
@@ -22,11 +22,11 @@ public final class StdIO {
     private static final String TYPE_DOUBLE = "double";
     private static final String TYPE_STRING = "String";
 
-    private static final String PREDICATE_FAILED = "n„o atende ao predicado informado!";
-    private static final String INVALID = "n„o È v·lido!";
+    private static final String PREDICATE_FAILED = "n√£o atende ao predicado informado!";
+    private static final String INVALID = "n√£o √© v√°lido!";
 
-    // n„o estou utilizando Scanner pois ele n„o È legal para ler entrada de dados a partir do teclado
-    // o Scanner n„o consome a quebra de linha ao presionar ENTER e isso gera comportamentos indesejados
+    // n√£o estou utilizando Scanner pois ele n√£o √© legal para ler entrada de dados a partir do teclado
+    // o Scanner n√£o consome a quebra de linha ao presionar ENTER e isso gera comportamentos indesejados
     private static final BufferedReader IN = new BufferedReader(new InputStreamReader(System.in));
     private static final PrintStream OUT = System.out;
 
@@ -636,7 +636,7 @@ public final class StdIO {
     }
 
     private static void showMessage(String type, String value, String message) {
-        println("Valor \"" + value + "\" do tipo " + type + " " + message);
+        println("O valor \"" + value + "\" para o tipo " + type + " " + message);
     }
 
     private static RuntimeException wrap(Throwable t) {
